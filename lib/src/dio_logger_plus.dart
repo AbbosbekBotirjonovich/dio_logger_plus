@@ -81,7 +81,9 @@ class DioLoggerPlus extends InterceptorsWrapper {
   void _log(String message, {String? color}) {
     final content = color != null ? AnsiColor.wrap(message, color) : message;
     for (var line in _chunk(content)) {
-      debugPrint(line);
+      if (_debug) {
+        print(line);
+      }
     }
   }
 
