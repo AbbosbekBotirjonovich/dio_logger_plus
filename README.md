@@ -62,25 +62,27 @@ dio.interceptors.add(DioLoggerPlus(
 ---
 ## 🧪 Example Output
 ```
-➡️ REQUEST → POST https://api.example.com/login
-🔸 Headers: {"Content-Type":"application/json"}
-📦 Body:
-{
-"email": "test@example.com",
-"password": "123456"
-}
+┌─────── 📤 REQUEST [2025-06-11 14:32:10] ───────
+│ ➡️ GET https://api.example.com/user/123
+│ 🔸 Headers:
+│ {
+│   "Authorization": "Bearer token123"
+│ }
+│ 📦 Body:
+│ {
+│   "email": "test@example.com"
+│ }
+└───────────────────────────────────────────────
 
-✅ RESPONSE:https://api.example.com/login:
-{
-"token": "abc123xyz"
-}
+┌────── ✅ RESPONSE (200 OK) [+123ms] ──────────
+│ URL: https://api.example.com/user/123
+│ 📦 Body:
+│ {
+│   "id": 123,
+│   "name": "John Doe"
+│ }
+└───────────────────────────────────────────────
 
-❌ ERROR ← https://api.example.com/login
-⛔️ Message: Unauthorized
-📛 Error Body:
-{
-"error": "Invalid credentials"
-}
 ```
 🔐 Debug-Only Logging
 

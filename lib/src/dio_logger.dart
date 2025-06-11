@@ -13,6 +13,7 @@ class DioLogger extends InterceptorsWrapper {
   final bool compact;
   final int maxWidth;
   final bool isOnlyDebug;
+  final bool showTimestamp;
 
   DioLogger({
     this.request = true,
@@ -23,26 +24,36 @@ class DioLogger extends InterceptorsWrapper {
     this.compact = true,
     this.maxWidth = 90,
     this.isOnlyDebug = true,
+    this.showTimestamp = true,
   });
 
   bool get _debug => isOnlyDebug ? kDebugMode : true;
+  final Map<Uri, DateTime> _requestStartTimes = {};
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (!_debug) return super.onRequest(options, handler);
-    if (request) {
-      _log('➡️ REQUEST → ${options.method} ${options.uri}');
-    }
+
+    _requestStartTimes[options.uri] = DateTime.now();
+
+    final timestamp = showTimestamp ? '[🕒 ${DateTime.now()}]' : '';
+    final buffer = StringBuffer('\n');
+
+    buffer.writeln('┌─────── 📤 REQUEST $timestamp ───────');
+    buffer.writeln('│ ➡️ ${options.method} ${options.uri}');
+
     if (requestHeader) {
-      if (options.headers.isNotEmpty) {
-        _printPrettyJson('🔸 Headers:', options.headers);
-      } else {
-        _log('🔸 Headers: {}');
-      }
+      buffer.writeln('│ 🔸 Headers:');
+      buffer.writeln(_indentJson(options.headers));
     }
+
     if (requestBody && options.data != null) {
-      _printPrettyJson("📦 Body", options.data);
+      buffer.writeln('│ 📦 Body:');
+      buffer.writeln(_indentJson(options.data));
     }
+
+    buffer.writeln('└───────────────────────────────────────────────');
+    _log(buffer.toString());
 
     super.onRequest(options, handler);
   }
@@ -51,9 +62,21 @@ class DioLogger extends InterceptorsWrapper {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (!_debug) return super.onResponse(response, handler);
 
+    final start = _requestStartTimes.remove(response.requestOptions.uri);
+    final duration = start != null ? DateTime.now().difference(start).inMilliseconds : null;
+
+    final buffer = StringBuffer('\n');
+    buffer
+        .writeln('┌────── ✅ RESPONSE (${response.statusCode}) [+${duration ?? '?'}ms] ──────────');
+    buffer.writeln('│ URL: ${response.requestOptions.uri}');
+
     if (responseBody && response.data != null) {
-      _printPrettyJson("✅ RESPONSE:${response.requestOptions.uri}", response.data);
+      buffer.writeln('│ 📦 Body:');
+      buffer.writeln(_indentJson(response.data));
     }
+
+    buffer.writeln('└───────────────────────────────────────────────');
+    _log(buffer.toString());
 
     super.onResponse(response, handler);
   }
@@ -62,36 +85,31 @@ class DioLogger extends InterceptorsWrapper {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (!_debug || !error) return super.onError(err, handler);
 
-    _log('❌ ERROR ← ${err.requestOptions.uri}');
-    _log('⛔️ Message: ${err.message}');
+    final buffer = StringBuffer('\n');
+    buffer.writeln('┌────── ❌ ERROR ───────');
+    buffer.writeln('│ URL: ${err.requestOptions.uri}');
+    buffer.writeln('│ ⛔️ Message: ${err.message}');
+
     if ((err.response?.data) != null) {
-      _printPrettyJson("📛 Error Body", err.response?.data);
+      buffer.writeln('│ 📛 Body:');
+      buffer.writeln(_indentJson(err.response?.data));
     }
+
+    buffer.writeln('└──────────────────────');
+    _log(buffer.toString());
 
     super.onError(err, handler);
   }
 
-  void _printPrettyJson(String title, dynamic jsonObj) {
+  String _indentJson(dynamic jsonObj) {
     try {
       final encoder = JsonEncoder.withIndent(compact ? '  ' : '    ');
       final pretty = encoder.convert(jsonObj);
-      final lines = pretty.split('\n');
-      final maxLength =
-          lines.map((e) => e.length).reduce((current, next) => current > next ? current : next);
-      final border = '=' * maxLength;
-      final result = [
-        border,
-        ...lines.map((line) {
-          var padLine = line.padRight(maxLength);
-          return "|| $padLine ||";
-        }),
-        border,
-      ].join('\n');
-      _log('\n$result', title);
+      return pretty.split('\n').map((line) => '│ $line').join('\n');
     } catch (e) {
-      _log('$title: $jsonObj');
+      return '│ $jsonObj';
     }
   }
 
-  void _log(String title, [String name = '']) => log(title, name: name);
+  void _log(String message) => log(message, name: 'Dio Logger');
 }

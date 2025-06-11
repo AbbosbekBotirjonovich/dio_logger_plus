@@ -4,7 +4,7 @@ description: >-
   responses, headers, and errors with pretty-printed JSON. Useful for debugging
   and development.
 
-version: 1.1.0
+version: 1.2.1
 homepage: https://github.com/AbbosbekBotirjonovich/dio_logger_plus.git
 
 environment:
