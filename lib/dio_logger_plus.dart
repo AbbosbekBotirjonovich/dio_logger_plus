@@ -1,3 +1,3 @@
 library;
 
-export 'src/dio_logger_plus.dart';
+export 'src/dio_logger.dart';

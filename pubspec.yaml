@@ -1,6 +1,10 @@
 name: dio_logger_plus
-description: "Custom logging interceptor for the Dio"
-version: 1.0.0
+description: >-
+  A powerful and customizable Dio interceptor for Flutter that logs HTTP requests,
+  responses, headers, and errors with pretty-printed JSON. Useful for debugging
+  and development.
+
+version: 1.1.0
 homepage: https://github.com/AbbosbekBotirjonovich/dio_logger_plus.git
 
 environment:
@@ -15,3 +19,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+topics:
+  - dio
+  - http
+  - logging
+  - network

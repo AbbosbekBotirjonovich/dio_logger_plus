@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-class DioLoggerPlus extends InterceptorsWrapper {
+class DioLogger extends InterceptorsWrapper {
   final bool requestHeader;
   final bool requestBody;
   final bool responseBody;
@@ -14,7 +14,7 @@ class DioLoggerPlus extends InterceptorsWrapper {
   final int maxWidth;
   final bool isOnlyDebug;
 
-  DioLoggerPlus({
+  DioLogger({
     this.request = true,
     this.requestHeader = true,
     this.requestBody = true,
@@ -34,7 +34,11 @@ class DioLoggerPlus extends InterceptorsWrapper {
       _log('➡️ REQUEST → ${options.method} ${options.uri}');
     }
     if (requestHeader) {
-      _log('🔸 Headers: ${jsonEncode(options.headers)}');
+      if (options.headers.isNotEmpty) {
+        _printPrettyJson('🔸 Headers:', options.headers);
+      } else {
+        _log('🔸 Headers: {}');
+      }
     }
     if (requestBody && options.data != null) {
       _printPrettyJson("📦 Body", options.data);
@@ -60,7 +64,7 @@ class DioLoggerPlus extends InterceptorsWrapper {
 
     _log('❌ ERROR ← ${err.requestOptions.uri}');
     _log('⛔️ Message: ${err.message}');
-    if (err.response?.data != null) {
+    if ((err.response?.data) != null) {
       _printPrettyJson("📛 Error Body", err.response?.data);
     }
 
@@ -71,14 +75,23 @@ class DioLoggerPlus extends InterceptorsWrapper {
     try {
       final encoder = JsonEncoder.withIndent(compact ? '  ' : '    ');
       final pretty = encoder.convert(jsonObj);
-      _log('$title:\n$pretty');
+      final lines = pretty.split('\n');
+      final maxLength =
+          lines.map((e) => e.length).reduce((current, next) => current > next ? current : next);
+      final border = '=' * maxLength;
+      final result = [
+        border,
+        ...lines.map((line) {
+          var padLine = line.padRight(maxLength);
+          return "|| $padLine ||";
+        }),
+        border,
+      ].join('\n');
+      _log('\n$result', title);
     } catch (e) {
       _log('$title: $jsonObj');
     }
   }
 
-  void _log(
-    String title,
-  ) =>
-      log(title);
+  void _log(String title, [String name = '']) => log(title, name: name);
 }
