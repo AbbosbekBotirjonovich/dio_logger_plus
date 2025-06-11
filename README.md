@@ -61,6 +61,7 @@ dio.interceptors.add(DioLoggerPlus(
 | `isOnlyDebug`   | `bool` | `true`  | Enables logging only in debug mode    |
 ---
 ## 🧪 Example Output
+```
 ➡️ REQUEST → POST https://api.example.com/login
 🔸 Headers: {"Content-Type":"application/json"}
 📦 Body:
@@ -80,7 +81,7 @@ dio.interceptors.add(DioLoggerPlus(
 {
 "error": "Invalid credentials"
 }
-
+```
 🔐 Debug-Only Logging
 
 By default, logs are shown only in debug mode (kDebugMode).
