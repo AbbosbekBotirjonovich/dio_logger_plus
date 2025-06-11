@@ -47,6 +47,7 @@ dio.interceptors.add(DioLoggerPlus(
   isOnlyDebug: true,
 ));
 ```
+---
 ## ⚙️ Configuration Options
 | Parameter       | Type   | Default | Description                           |
 | --------------- | ------ | ------- | ------------------------------------- |
@@ -58,7 +59,7 @@ dio.interceptors.add(DioLoggerPlus(
 | `compact`       | `bool` | `true`  | Minimized JSON indentation            |
 | `maxWidth`      | `int`  | `90`    | (Reserved) Max width of the log lines |
 | `isOnlyDebug`   | `bool` | `true`  | Enables logging only in debug mode    |
-
+---
 ## 🧪 Example Output
 ➡️ REQUEST → POST https://api.example.com/login
 🔸 Headers: {"Content-Type":"application/json"}
