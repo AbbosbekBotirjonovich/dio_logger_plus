@@ -1,5 +1,5 @@
 name: dio_logger_plus
-description: "A new Flutter project."
+description: "Custom logging interceptor for the Dio"
 version: 1.0.0
 homepage: https://github.com/AbbosbekBotirjonovich/dio_logger_plus.git
 
