@@ -1,6 +1,9 @@
 # DioLoggerPlus
 
-**DioLoggerPlus** is a custom logging interceptor for the [Dio](https://pub.dev/packages/dio) HTTP client in Flutter. It helps developers easily debug HTTP requests and responses by printing clean, formatted logs in the console.
+[!![Pub](https://img.shields.io/badge/pub-v1.2.1-blue)](https://pub.dev/packages/dio_logger_plus)
+
+**DioLoggerPlus** is a custom logging interceptor for the [Dio](https://pub.dev/packages/dio) HTTP client in Flutter. It helps developers easily debug
+HTTP requests and responses by printing clean, formatted logs in the console.
 
 ---
 
@@ -24,6 +27,7 @@ Add `dio` to your `pubspec.yaml`:
 dependencies:
   dio: ^5.0.0
 ```
+
 Then copy the DioLoggerPlus class into your project.
 
 ## 🚀 Usage
@@ -47,10 +51,13 @@ dio.interceptors.add(DioLoggerPlus(
   isOnlyDebug: true,
 ));
 ```
+
 ---
+
 ## ⚙️ Configuration Options
+
 | Parameter       | Type   | Default | Description                           |
-| --------------- | ------ | ------- | ------------------------------------- |
+|-----------------|--------|---------|---------------------------------------|
 | `request`       | `bool` | `true`  | Logs HTTP method and URL              |
 | `requestHeader` | `bool` | `true`  | Logs request headers                  |
 | `requestBody`   | `bool` | `true`  | Logs request body                     |
@@ -59,8 +66,11 @@ dio.interceptors.add(DioLoggerPlus(
 | `compact`       | `bool` | `true`  | Minimized JSON indentation            |
 | `maxWidth`      | `int`  | `90`    | (Reserved) Max width of the log lines |
 | `isOnlyDebug`   | `bool` | `true`  | Enables logging only in debug mode    |
+
 ---
+
 ## 🧪 Example Output
+
 ```
 ┌─────── 📤 REQUEST [2025-06-11 14:32:10] ───────
 │ ➡️ GET https://api.example.com/user/123
@@ -84,6 +94,7 @@ dio.interceptors.add(DioLoggerPlus(
 └───────────────────────────────────────────────
 
 ```
+
 🔐 Debug-Only Logging
 
 By default, logs are shown only in debug mode (kDebugMode).
