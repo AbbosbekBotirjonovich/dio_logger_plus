@@ -1,6 +1,6 @@
 # DioLoggerPlus
 
-[!![Pub](https://img.shields.io/badge/pub-v1.2.1-blue)](https://pub.dev/packages/dio_logger_plus)
+[![Pub](https://img.shields.io/badge/pub-v1.2.1-blue)](https://pub.dev/packages/dio_logger_plus)
 
 **DioLoggerPlus** is a custom logging interceptor for the [Dio](https://pub.dev/packages/dio) HTTP client in Flutter. It helps developers easily debug
 HTTP requests and responses by printing clean, formatted logs in the console.
